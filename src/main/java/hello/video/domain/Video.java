@@ -1,6 +1,7 @@
 package hello.video.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -8,9 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 public class Video {
 
     public Video() {}
+
+    public Video(String title, String description, String file_path, String thumbnail_path, LocalDateTime uploadedTime, User user){
+        this.title = title;
+        this.description = description;
+        this.file_path = file_path;
+        this.thumbnail_path = thumbnail_path;
+        this.uploadedTime = uploadedTime;
+        this.user = user;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
