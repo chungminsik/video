@@ -5,11 +5,11 @@
 ```mermaid
 erDiagram
     Users {
-        int id PK
-        string username
-        string password
-        string email
-        datetime created_at
+        int Long PK
+        String username
+        String password
+        String email
+        LocalDateTime createdTime
     }
 
     Videos {
