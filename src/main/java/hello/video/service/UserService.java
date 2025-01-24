@@ -5,6 +5,7 @@ import hello.video.domain.Video;
 import hello.video.domain.dto.MypageDTO;
 import hello.video.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,18 +15,22 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public User registerUser_ROLE_USER(User user){
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 이메일 입니다");
         }
 
-        user.registerUser_ROLE_USER(passwordEncoder.encode(user.getPassword()));
+        user.setRole("ROLE_USER");
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         User saveUser = userRepository.save(user);
 
         return saveUser;

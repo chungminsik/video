@@ -6,6 +6,13 @@
     <title>내 동영상 관리</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .thumbnail-img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
 <!-- 상단 네비게이션 바 -->
@@ -75,9 +82,11 @@
     <div class="row">
         <div class="col-md-4 mb-4" th:each="video : ${mypage.videos}">
             <div class="card">
-                <img th:src="@{${video.thumbnailPath}}" class="card-img-top" alt="썸네일">
+                <img th:src="@{${video.thumbnailUrl}}" class="card-img-top thumbnail-img" alt="썸네일">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${video.title}">동영상 제목</h5>
+                    <h5 class="card-title">
+                        <a th:href="@{/videos/watch/{id}(id=${video.id})}" class="text-decoration-none" th:text="${video.title}"></a>
+                    </h5>
                     <p class="card-text" th:text="${video.description}">동영상 설명</p>
                     <p class="text-muted" th:text="'업로드 날짜: ' + ${video.uploadDate}"></p>
                     <div class="d-flex justify-content-between">

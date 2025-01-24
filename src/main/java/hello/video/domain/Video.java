@@ -14,11 +14,13 @@ public class Video {
 
     public Video() {}
 
-    public Video(String title, String description, String file_path, String thumbnail_path, LocalDateTime uploadedTime, User user){
+    public Video(String title, String description, String filePath, String fileUrl, String thumbnailPath, String thumbnailUrl, LocalDateTime uploadedTime, User user) {
         this.title = title;
         this.description = description;
-        this.file_path = file_path;
-        this.thumbnailPath = thumbnail_path;
+        this.filePath = filePath;
+        this.fileUrl = fileUrl;
+        this.thumbnailPath = thumbnailPath;
+        this.thumbnailUrl = thumbnailUrl;
         this.uploadDate = uploadedTime;
         this.user = user;
     }
@@ -41,10 +43,16 @@ public class Video {
     private String description;
 
     @Column(nullable = false)
-    private String file_path;
+    private String filePath; // 로컬 파일 시스템에서의 비디오 저장 경로
 
     @Column(nullable = false)
-    private String thumbnailPath;
+    private String fileUrl; // 브라우저에서 접근 가능한 비디오 URL
+
+    @Column(nullable = false)
+    private String thumbnailPath; // 로컬 파일 시스템에서의 썸네일 저장 경로
+
+    @Column(nullable = false)
+    private String thumbnailUrl; // 브라우저에서 접근 가능한 썸네일 URL
 
     @Column(nullable = false)
     private Long views = 0L;

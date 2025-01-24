@@ -31,6 +31,9 @@ public class VideoService {
     @Value("${file.upload.thumbnail-path}")
     private String thumbnailPath;
 
+    private final String videoUrlPrefix = "/videos/";
+    private final String thumbnailUrlPrefix = "/thumbnails/";
+
     @Transactional
     public List<Video> uploadVideo(MultipartFile file, String title, String description, MultipartFile thumbnail, String email) {
         try{
@@ -63,9 +66,20 @@ public class VideoService {
             String videoPathToString = videoPath.toString();
             String thumbnailFileNameToString = thumbnailFileName != null ? thumbnailDir + thumbnailFileName : null;
 
-            Video video = new Video(title, description, videoPathToString, thumbnailFileNameToString, LocalDateTime.now(), user);
-            videoRepository.save(video);
+            String videoUrl = videoUrlPrefix + videoFileName;
+            String thumbnailUrl = thumbnailUrlPrefix + thumbnailFileName;
 
+            Video video = new Video(
+                    title,
+                    description,
+                    videoPathToString,
+                    videoUrl,
+                    thumbnailFileNameToString,
+                    thumbnailUrl,
+                    LocalDateTime.now(),
+                    user);
+
+            videoRepository.save(video);
             return user.getVideos();
 
         }catch (IOException e){
@@ -79,6 +93,12 @@ public class VideoService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다"));
 
         List<Video> videoList = user.getVideos();
+        return videoList;
+    }
+
+    public List<Video> getAllVideoList(){
+        List<Video> videoList = videoRepository.findAll();
+
         return videoList;
     }
 }
