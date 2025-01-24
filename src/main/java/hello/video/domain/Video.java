@@ -18,8 +18,8 @@ public class Video {
         this.title = title;
         this.description = description;
         this.file_path = file_path;
-        this.thumbnail_path = thumbnail_path;
-        this.uploadedTime = uploadedTime;
+        this.thumbnailPath = thumbnail_path;
+        this.uploadDate = uploadedTime;
         this.user = user;
     }
 
@@ -44,11 +44,11 @@ public class Video {
     private String file_path;
 
     @Column(nullable = false)
-    private String thumbnail_path;
+    private String thumbnailPath;
 
     @Column(nullable = false)
     private Long views = 0L;
 
     @CreationTimestamp
-    private LocalDateTime uploadedTime;
+    private LocalDateTime uploadDate;
 }

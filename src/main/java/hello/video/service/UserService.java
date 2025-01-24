@@ -25,10 +25,10 @@ public class UserService {
             throw new IllegalArgumentException("이미 사용중인 이메일 입니다");
         }
 
-        user.setRole("ROLE_USER");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.registerUser_ROLE_USER(passwordEncoder.encode(user.getPassword()));
+        User saveUser = userRepository.save(user);
 
-        return userRepository.save(user);
+        return saveUser;
     }
 
     @Transactional

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
+//@Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,4 +40,14 @@ public class User {
     private LocalDateTime createdTime;
 
     private String role;
+
+    public void registerUser_ROLE_USER(String encodePassword){
+        this.password = encodePassword;
+        this.role = "ROLE_USER";
+    }
+
+    public void registerUser_ADMIN_USER(String encodePassword){
+        this.password = encodePassword;
+        this.role = "ADMIN_USER";
+    }
 }

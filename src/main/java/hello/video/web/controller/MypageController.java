@@ -1,6 +1,7 @@
 package hello.video.web.controller;
 
 import hello.video.domain.User;
+import hello.video.domain.Video;
 import hello.video.domain.dto.MypageDTO;
 import hello.video.service.UserService;
 import hello.video.service.VideoService;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,8 +41,13 @@ public class MypageController {
                               @RequestParam("title") String title,
                               @RequestParam("description") String description,
                               @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-                              @AuthenticationPrincipal CustomUserDetails userDetails) {
-        videoService.uploadVideo(file, title, description, thumbnail, userDetails.getUsername());
+                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                              Model model) {
+        String email = userDetails.getUsername();
+        List<Video> videoList = videoService.uploadVideo(file, title, description, thumbnail, email);
+
+        model.addAttribute("myVideos", videoList);
+
         return "redirect:/mypage";
     }
 
