@@ -30,23 +30,53 @@ public class MypageController {
     @GetMapping("/mypage")
     public String getMypage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model){
         MypageDTO mypageDTO = userService.getMypageDTO(userDetails.getUsername());
-
         model.addAttribute("mypage", mypageDTO);
 
         return "mypage";
     }
 
     @PostMapping("/mypage/upload")
-    public String uploadVideo(@RequestParam("file") MultipartFile file,
+    public String uploadVideo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                              @RequestParam("file") MultipartFile file,
                               @RequestParam("title") String title,
                               @RequestParam("description") String description,
                               @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
-                              @AuthenticationPrincipal CustomUserDetails userDetails,
                               Model model) {
         String email = userDetails.getUsername();
         List<Video> videoList = videoService.uploadVideo(file, title, description, thumbnail, email);
-
         model.addAttribute("myVideos", videoList);
+
+        return "redirect:/mypage";
+    }
+
+    //TODO 삭제기능
+    @PostMapping("mypage/delete{id}")
+    public String deleteVideo(@AuthenticationPrincipal CustomUserDetails userDetails
+
+
+                              ){
+
+
+        return "redirect:/mypage";
+    }
+
+
+
+    @PostMapping("/mypage/editVideo")
+    public String editVideo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                            @RequestParam("editVideoId") Long id,
+                            @RequestParam("editTitle") String editTitle,
+                            @RequestParam("editDescription") String editDescription,
+                            @RequestParam(value = "editThumbnailFile", required = false) MultipartFile editThumbnailFile,
+                            Model model
+                            ){
+        MypageDTO customUser = userService.getMypageDTO(userDetails.getUsername());
+
+        if (customUser == null){
+            return "";
+        }
+
+        //TODO
 
         return "redirect:/mypage";
     }

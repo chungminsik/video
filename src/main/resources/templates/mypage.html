@@ -85,12 +85,18 @@
                 <img th:src="@{${video.thumbnailUrl}}" class="card-img-top thumbnail-img" alt="썸네일">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <a th:href="@{/videos/watch/{id}(id=${video.id})}" class="text-decoration-none" th:text="${video.title}"></a>
+                        <a th:href="@{/videos/{id}(id=${video.id})}" class="text-decoration-none" th:text="${video.title}"></a>
                     </h5>
                     <p class="card-text" th:text="${video.description}">동영상 설명</p>
                     <p class="text-muted" th:text="'업로드 날짜: ' + ${video.uploadDate}"></p>
                     <div class="d-flex justify-content-between">
-                        <a th:href="@{/videos/edit/{id}(id=${video.id})}" class="btn btn-warning btn-sm">수정</a>
+                        <button
+                                class="btn btn-warning btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal"
+                                th:attr="data-id=${video.id}, data-title=${video.title}, data-description=${video.description}, data-thumbnail=${video.thumbnailUrl}">
+                            수정
+                        </button>
                         <form th:action="@{/videos/delete/{id}(id=${video.id})}" method="post">
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
                         </form>
@@ -99,6 +105,61 @@
             </div>
         </div>
     </div>
+    <!-- 수정 모달 -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">동영상 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form th:action="@{/mypage/editVideo}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="editVideoId" id="editVideoId">
+
+                        <div class="mb-3">
+                            <label for="editTitle" class="form-label">제목</label>
+                            <input type="text" class="form-control" id="editTitle" name="editTitle" placeholder="동영상 제목" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label">설명</label>
+                            <textarea class="form-control" id="editDescription" name="editDescription" rows="3" placeholder="동영상 설명"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editThumbnailFile" class="form-label">썸네일 이미지 (선택)</label>
+                            <input type="file" class="form-control" id="editThumbnailFile" name="editThumbnailFile">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">수정하기</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    // 수정 모달에 데이터 채우기
+    const editModal = document.getElementById('editModal');
+    editModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
+        const title = button.getAttribute('data-title');
+        const description = button.getAttribute('data-description');
+        const thumbnail = button.getAttribute('data-thumbnailUrl');
+
+        const modalTitleInput = editModal.querySelector('#editTitle');
+        const modalDescriptionInput = editModal.querySelector('#editDescription');
+        const modalThumbnailInput = editModal.querySelector('#editThumbnailFile');
+        const modalIdInput = editModal.querySelector('#editVideoId');
+
+        modalTitleInput.value = title;
+        modalDescriptionInput.value = description;
+        modalIdInput.value = id;
+        modalThumbnailInput = thumbnail;
+    });
+</script>
 </body>
 </html>

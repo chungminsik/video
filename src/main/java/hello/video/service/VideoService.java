@@ -33,7 +33,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class VideoService {
 
-    private static final Logger log = LoggerFactory.getLogger(VideoService.class);
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
 
@@ -46,12 +45,10 @@ public class VideoService {
     private final String videoUrlPrefix = "/videos/";
     private final String thumbnailUrlPrefix = "/thumbnails/";
 
-    private final String VIDEO_STORAGE_PATH = "/Users/jeongminsig/coding/Java/uploads/videos";
-
-
     @Transactional
     public List<Video> uploadVideo(MultipartFile file, String title, String description, MultipartFile thumbnail, String email) {
         try{
+            //업로드 된 비디오와 썸네일이 비디오와 사진 형식의 파일인지 검사(아니면 오류 발생)
             if (!file.getContentType().startsWith("video/")){
                 throw new IllegalArgumentException("동영상 파일만 업로드 가능합니다.");
             }
@@ -59,31 +56,20 @@ public class VideoService {
                 throw new IllegalArgumentException("썸네일은 이미지 파일만 가능합니다.");
             }
 
-            String videoDir = videoPath;
-            String thumbnailDir = thumbnailPath;
+            //디렉토리에 비디오,썸네일 파일을 저장하고, 이름을 반환
+            String videoFileName = saveVideoFileInDirectory(file);
+            String thumbnailFileName = saveThumbnailFileInDirectory(thumbnail);
 
-            String videoFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path videoPath = Paths.get(videoDir, videoFileName);
-            Files.createDirectories(videoPath.getParent());
-            file.transferTo(videoPath.toFile());
+            // 이메일로 저장한 유저를 찾아옴
+            String videoPathToString = videoPath.toString() + videoFileName;
+            String thumbnailFileNameToString = thumbnailFileName != null ? thumbnailPath + thumbnailFileName : null;
 
-            String thumbnailFileName = null;
-            if (thumbnail != null && !thumbnail.isEmpty()) {
-                thumbnailFileName = UUID.randomUUID() + "_" + thumbnail.getOriginalFilename();
-                Path thumbnailPath = Paths.get(thumbnailDir, thumbnailFileName);
-                Files.createDirectories(thumbnailPath.getParent());
-                thumbnail.transferTo(thumbnailPath.toFile());
-            }
-
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다"));
-
-            String videoPathToString = videoPath.toString();
-            String thumbnailFileNameToString = thumbnailFileName != null ? thumbnailDir + thumbnailFileName : null;
-
+            //요청 주소를 생성
             String videoUrl = videoUrlPrefix + videoFileName;
             String thumbnailUrl = thumbnailUrlPrefix + thumbnailFileName;
 
+            User user = getUser(email);
+            //비디오 객체 생성 및 저장
             Video video = new Video(
                     title,
                     description,
@@ -92,9 +78,11 @@ public class VideoService {
                     thumbnailFileNameToString,
                     thumbnailUrl,
                     LocalDateTime.now(),
-                    user);
-
+                    user
+            );
             videoRepository.save(video);
+
+            //마이페이지에 보여줄 비디오를 가져감
             return user.getVideos();
 
         }catch (IOException e){
@@ -102,19 +90,57 @@ public class VideoService {
         }
     }
 
-    public ResponseEntity<Resource> getVideoStream(Long id, String rangeHeader) throws FileNotFoundException {
-        try{
-            Video video = videoRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid video id"));
+    private String saveVideoFileInDirectory(MultipartFile file) throws IOException {
+        String videoDir = videoPath;
 
-            String videoFileName = video.getFilePath();
-            //Path videoPath = Paths.get(VIDEO_STORAGE_PATH, videoFileName);
+        String videoFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path videoPath = Paths.get(videoDir, videoFileName);
+        Files.createDirectories(videoPath.getParent());
+        file.transferTo(videoPath.toFile());
+
+        return videoFileName;
+    }
+
+    private String saveThumbnailFileInDirectory(MultipartFile thumbnail) throws IOException {
+        String thumbnailDir = thumbnailPath;
+
+        String thumbnailFileName = UUID.randomUUID() + "_" + thumbnail.getOriginalFilename();
+        Path thumbnailPath = Paths.get(thumbnailDir, thumbnailFileName);
+        Files.createDirectories(thumbnailPath.getParent());
+        thumbnail.transferTo(thumbnailPath.toFile());
+
+        return thumbnailFileName;
+    }
+
+    @Transactional
+    public List<Video> deleteVideo(){
+
+
+        return null;
+    }
+
+    @Transactional
+    public List<Video> updateVideo(Long videoId, String editTitle, String editDescription, MultipartFile editThumbnailFile){
+
+
+
+
+        return null;
+    }
+
+    public ResponseEntity<Resource> getVideoStream(Long id, String rangeHeader) {
+        try{
+            //Id를 통해 요청이 들어온 동영상 검색(재생 화면을 열 때도 검색을 진행하는데 중복된 검색이 진행됨)
+            Video video = getVideoById(id);
+            //video의 실제 주소를 가져옴
             Path videoPath = Paths.get(video.getFilePath());
 
+            //파일이 없으면 NOT FOUND
             if (!videoPath.toFile().exists()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
+            //비디오 길이
             long videoLength = videoPath.toFile().length();
             byte[] videoBytes;
 
@@ -158,12 +184,9 @@ public class VideoService {
         }
     }
 
-    public List<Video> getVideoList(String email){
-        User user = userRepository.findByEmail(email)
+    private User getUser(String email){
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다"));
-
-        List<Video> videoList = user.getVideos();
-        return videoList;
     }
 
     public List<Video> getAllVideoList(){
@@ -176,6 +199,4 @@ public class VideoService {
         return videoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Video not found with id: " + id));
     }
-
-
 }
