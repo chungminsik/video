@@ -24,9 +24,6 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/hlsIndex">HLS Index</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/mypage">마이페이지</a>
                 </li>
                 <li class="nav-item">
@@ -48,7 +45,7 @@
                 <div class="card-body">
                     <!-- 동영상 제목 (링크) -->
                     <h5 class="card-title">
-                        <a th:href="@{/videos/{id}(id=${video.id})}" class="text-decoration-none text-dark" th:text="${video.title}">동영상 제목</a>
+                        <a th:href="@{/hlsVideo/{id}(id=${video.id})}" class="text-decoration-none text-dark" th:text="${video.title}">동영상 제목</a>
                     </h5>
                     <!-- 업로더 및 업로드 날짜 -->
                     <p class="card-text">

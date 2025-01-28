@@ -23,4 +23,12 @@ public class HomeController {
 
         return "index";
     }
+
+    @GetMapping("/hlsIndex")
+    public String getHlsMain(Model model){
+        List<Video> videoList = videoService.getAllVideoList();
+        model.addAttribute("videos", videoList);
+
+        return "hlsIndex";
+    }
 }

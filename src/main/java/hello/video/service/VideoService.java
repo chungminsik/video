@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,8 +44,12 @@ public class VideoService {
     @Value("${file.upload.thumbnail-path}")
     private String thumbnailPath;
 
+    @Value("${file.upload.hls-path}")
+    private String hlsPath;
+
     private final String videoUrlPrefix = "/videos/";
     private final String thumbnailUrlPrefix = "/thumbnails/";
+    private static final String HLS_DIRECTORY = "/Users/jeongminsig/coding/Java/uploads/videos/";
 
     @Transactional
     public List<Video> uploadVideo(MultipartFile file, String title, String description, MultipartFile thumbnail, String email) {
@@ -115,15 +121,11 @@ public class VideoService {
     @Transactional
     public List<Video> deleteVideo(){
 
-
         return null;
     }
 
     @Transactional
     public List<Video> updateVideo(Long videoId, String editTitle, String editDescription, MultipartFile editThumbnailFile){
-
-
-
 
         return null;
     }
@@ -183,6 +185,114 @@ public class VideoService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @Transactional
+    public List<Video> uploadVideoHls(MultipartFile file, String title, String description, MultipartFile thumbnail, String email) {
+        try {
+            // 업로드 된 비디오와 썸네일이 비디오와 사진 형식의 파일인지 검사
+            if (!file.getContentType().startsWith("video/")) {
+                throw new IllegalArgumentException("동영상 파일만 업로드 가능합니다.");
+            }
+            if (thumbnail != null && !thumbnail.getContentType().startsWith("image/")) {
+                throw new IllegalArgumentException("썸네일은 이미지 파일만 가능합니다.");
+            }
+
+            String originalVideoFileName = saveVideoFileInDirectory(file);
+            String thumbnailFileName = saveThumbnailFileInDirectory(thumbnail);
+
+            String hlsDirectory = convertToHLS(originalVideoFileName);
+
+            User user = getUser(email);
+
+            String videoUrl = hlsDirectory + "/playlist.m3u8";
+            String thumbnailUrl = thumbnailFileName != null ? thumbnailUrlPrefix + thumbnailFileName : null;
+
+            Video video = new Video(
+                    title,
+                    description,
+                    videoPath + originalVideoFileName,
+                    videoUrl,
+                    thumbnailPath + thumbnailFileName,
+                    thumbnailUrl,
+                    LocalDateTime.now(),
+                    user
+            );
+            videoRepository.save(video);
+
+            return user.getVideos();
+
+        } catch (IOException e) {
+            throw new RuntimeException("파일 업로드 오류", e);
+        }
+
+    }
+
+    private String convertToHLS(String videoFileName) throws IOException {
+        String inputVideoPath = videoPath + videoFileName;
+        String hlsOutputDir = videoPath + UUID.randomUUID() + "/";
+        Files.createDirectories(Paths.get(hlsOutputDir));
+
+        String ffmpegCommand = String.format(
+                "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s/playlist.m3u8",
+                inputVideoPath,
+                hlsOutputDir
+        );
+
+        Process process = Runtime.getRuntime().exec(ffmpegCommand);
+
+        try{
+            process.waitFor();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("HLS 변환오류", e);
+        }
+
+        return hlsOutputDir;
+    }
+
+
+    public ResponseEntity<Resource> getHlsPlaylist(Long id){
+        Video video = videoRepository.getReferenceById(id);
+
+        try {
+            // HLS 파일 경로 (예: /path/to/hls/files/{id}/playlist.m3u8)
+            Path playlistPath = Paths.get(HLS_DIRECTORY, video.getTitle(), "playlist.m3u8");
+            Resource resource = new UrlResource(playlistPath.toUri());
+
+            if (!resource.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, "application/vnd.apple.mpegurl")
+                    .body(resource);
+
+        } catch (MalformedURLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<Resource> getHlsSegment(Long id, String segment) {
+        Video video = videoRepository.getReferenceById(id);
+
+        try {
+            // HLS 세그먼트 경로 (예: /path/to/hls/files/{id}/{segment}.ts)
+            Path segmentPath = Paths.get(HLS_DIRECTORY, video.getTitle(), segment);
+            Resource resource = new UrlResource(segmentPath.toUri());
+
+            if (!resource.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, "video/MP2T")
+                    .body(resource);
+
+        } catch (MalformedURLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     private User getUser(String email){
         return userRepository.findByEmail(email)

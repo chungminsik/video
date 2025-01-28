@@ -43,19 +43,19 @@ public class MypageController {
                               @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
                               Model model) {
         String email = userDetails.getUsername();
-        List<Video> videoList = videoService.uploadVideo(file, title, description, thumbnail, email);
+        List<Video> videoList = videoService.uploadVideoHls(file, title, description, thumbnail, email);
         model.addAttribute("myVideos", videoList);
 
         return "redirect:/mypage";
     }
 
-    //TODO 삭제기능
+
     @PostMapping("mypage/delete{id}")
     public String deleteVideo(@AuthenticationPrincipal CustomUserDetails userDetails
 
 
                               ){
-
+        //TODO 삭제기능
 
         return "redirect:/mypage";
     }
@@ -76,7 +76,7 @@ public class MypageController {
             return "";
         }
 
-        //TODO
+        //TODO 수정기능
 
         return "redirect:/mypage";
     }

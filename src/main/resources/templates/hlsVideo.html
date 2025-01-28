@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS 동영상 시청</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script> <!-- HLS.js CDN -->
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="video-container">
+    <!-- 동영상 플레이어 -->
+    <video id="hls-video" controls autoplay></video>
+
+    <!-- 동영상 제목 -->
+    <div class="video-title" th:text="${video.title}"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const video = document.getElementById('hls-video');
+        const hlsUrl = /*[[${video.fileUrl}]]*/ '/hlsVideo/[[${video.id}]]'; // HLS URL을 서버에서 전달
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = hlsUrl;
+        } else {
+            alert("HLS를 지원하지 않는 브라우저입니다.");
+        }
+    });
+</script>
+</body>
+</html>

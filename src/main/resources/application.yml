@@ -37,5 +37,6 @@ file:
   upload:
     video-path: /Users/jeongminsig/coding/Java/uploads/videos/
     thumbnail-path: /Users/jeongminsig/coding/Java/uploads/thumbnails/
+    hls-path: /Users/jeongminsig/coding/Java/uploads/hls/
     #video-path: C:/coding/Java project/uploads/videos/
     #thumbnail-path: C:/coding/Java project/uploads/thumbnails/

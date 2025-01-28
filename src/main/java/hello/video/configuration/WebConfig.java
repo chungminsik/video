@@ -14,6 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:/Users/jeongminsig/coding/Java/uploads/thumbnails/");
         registry.addResourceHandler("/videos/**")
                 .addResourceLocations("file:/Users/jeongminsig/coding/Java/uploads/videos/");
+        registry.addResourceHandler("/videos/**")
+                .addResourceLocations("file:/Users/jeongminsig/coding/Java/uploads/hls/");
     }
 
 }
