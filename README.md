@@ -1,4 +1,42 @@
-# アプリの説明
+# 動画共有視聴システム
+## 概要
+...
+
+## このアプリを使ってできること
+...
+
+# 技術スペック
+## back-end framework : Java spring boot
+...
+
+## front-end : Thymeleaf template, bootstrap framework
+...
+
+## database : JPA, mysql
+...
+
+# 機能とサービス説明
+...
+
+## ログイン&会員登録
+...
+
+## 動画ホーム
+...
+
+## マイページ
+...
+
+## 動画登録
+...
+
+## 動画視聴
+...
+
+## いいですね ボタン(開発予定)
+...
+
+## 動画検索(開発予定)
 ...
 
 # ER Diagram
