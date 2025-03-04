@@ -46,13 +46,4 @@ public class UserService {
 
         return new MypageDTO(user, videos);
     }
-
-    @Transactional
-    public void info(){
-        User user = new User();
-        userRepository.save(user);
-
-        User user1 = userRepository.findById(user.getId()).get();
-    }
-
 }

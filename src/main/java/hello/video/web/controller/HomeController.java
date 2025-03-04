@@ -18,7 +18,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String getMain(Model model){
-        List<Video> videoList = videoService.getAllVideoList();
+        List<Video> videoList = videoService.getVideoList();
         model.addAttribute("videos", videoList);
 
         return "index";

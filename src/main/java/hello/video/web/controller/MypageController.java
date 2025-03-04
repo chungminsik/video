@@ -49,19 +49,17 @@ public class MypageController {
         return "redirect:/mypage";
     }
 
-    //TODO 삭제기능
-    @PostMapping("mypage/delete{id}")
-    public String deleteVideo(@AuthenticationPrincipal CustomUserDetails userDetails
+    @PostMapping("videos/delete")
+    public String deleteVideo(@AuthenticationPrincipal CustomUserDetails userDetails,
+                              @RequestParam("videoId") Long videoId){
 
-
-                              ){
-
+        String email = userDetails.getUsername();
+        videoService.HardDeleteVideo(videoId, email);
 
         return "redirect:/mypage";
     }
 
-
-
+    //TODO 수정기능
     @PostMapping("/mypage/editVideo")
     public String editVideo(@AuthenticationPrincipal CustomUserDetails userDetails,
                             @RequestParam("editVideoId") Long id,
@@ -76,7 +74,7 @@ public class MypageController {
             return "";
         }
 
-        //TODO
+
 
         return "redirect:/mypage";
     }

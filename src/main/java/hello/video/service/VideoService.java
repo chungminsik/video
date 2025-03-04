@@ -6,8 +6,6 @@ import hello.video.repository.UserRepository;
 import hello.video.repository.VideoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
@@ -27,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -44,6 +42,16 @@ public class VideoService {
 
     private final String videoUrlPrefix = "/videos/";
     private final String thumbnailUrlPrefix = "/thumbnails/";
+
+    public List<Video> getVideoList(){
+        List<Video> videoList = videoRepository.findAll();
+        return videoList;
+    }
+
+    public Video getVideoById(Long id){
+        return videoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Video not found with id: " + id));
+    }
 
     @Transactional
     public List<Video> uploadVideo(MultipartFile file, String title, String description, MultipartFile thumbnail, String email) {
@@ -68,7 +76,8 @@ public class VideoService {
             String videoUrl = videoUrlPrefix + videoFileName;
             String thumbnailUrl = thumbnailUrlPrefix + thumbnailFileName;
 
-            User user = getUser(email);
+            User user = userRepository.findByEmail(email).get();
+
             //비디오 객체 생성 및 저장
             Video video = new Video(
                     title,
@@ -90,34 +99,6 @@ public class VideoService {
         }
     }
 
-    private String saveVideoFileInDirectory(MultipartFile file) throws IOException {
-        String videoDir = videoPath;
-
-        String videoFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path videoPath = Paths.get(videoDir, videoFileName);
-        Files.createDirectories(videoPath.getParent());
-        file.transferTo(videoPath.toFile());
-
-        return videoFileName;
-    }
-
-    private String saveThumbnailFileInDirectory(MultipartFile thumbnail) throws IOException {
-        String thumbnailDir = thumbnailPath;
-
-        String thumbnailFileName = UUID.randomUUID() + "_" + thumbnail.getOriginalFilename();
-        Path thumbnailPath = Paths.get(thumbnailDir, thumbnailFileName);
-        Files.createDirectories(thumbnailPath.getParent());
-        thumbnail.transferTo(thumbnailPath.toFile());
-
-        return thumbnailFileName;
-    }
-
-    @Transactional
-    public List<Video> deleteVideo(){
-
-
-        return null;
-    }
 
     @Transactional
     public List<Video> updateVideo(Long videoId, String editTitle, String editDescription, MultipartFile editThumbnailFile){
@@ -127,6 +108,42 @@ public class VideoService {
 
         return null;
     }
+
+
+    @Transactional
+    public List<Video> HardDeleteVideo(Long videoId, String userName){
+        // 비디오 존재 여부 확인
+        Optional<Video> videoOptional = videoRepository.findById(videoId);
+        if (!videoOptional.isPresent()) {
+            throw new RuntimeException("비디오를 찾을 수 없습니다.");
+        }
+        Video video = videoOptional.get();
+
+        // 사용자 소유권 검증
+        if (!video.getUser().getEmail().equals(userName)) {
+            throw new RuntimeException("삭제 권한이 없습니다.");
+        }
+
+        // 파일 삭제
+        String videoFilePath = video.getFilePath();  // 비디오 파일 경로
+        String thumbnailFilePath = video.getThumbnailPath(); // 썸네일 파일 경로
+
+        Path videoPath = Paths.get(videoFilePath);
+        Path thumbnailPath = Paths.get(thumbnailFilePath);
+
+        try {
+            Files.delete(videoPath);
+            Files.delete(thumbnailPath);
+        } catch (IOException e) {
+            throw new RuntimeException("비디오 파일 삭제에 실패했습니다: " + e.getMessage(), e);
+        }
+
+        // DB 레코드 삭제
+        videoRepository.delete(video);
+
+        return getVideoList();
+    }
+
 
     public ResponseEntity<Resource> getVideoStream(Long id, String rangeHeader) {
         try{
@@ -184,19 +201,25 @@ public class VideoService {
         }
     }
 
-    private User getUser(String email){
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다"));
+    private String saveVideoFileInDirectory(MultipartFile file) throws IOException {
+        String videoDir = videoPath;
+
+        String videoFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path videoPath = Paths.get(videoDir, videoFileName);
+        Files.createDirectories(videoPath.getParent());
+        file.transferTo(videoPath.toFile());
+
+        return videoFileName;
     }
 
-    public List<Video> getAllVideoList(){
-        List<Video> videoList = videoRepository.findAll();
+    private String saveThumbnailFileInDirectory(MultipartFile thumbnail) throws IOException {
+        String thumbnailDir = thumbnailPath;
 
-        return videoList;
-    }
+        String thumbnailFileName = UUID.randomUUID() + "_" + thumbnail.getOriginalFilename();
+        Path thumbnailPath = Paths.get(thumbnailDir, thumbnailFileName);
+        Files.createDirectories(thumbnailPath.getParent());
+        thumbnail.transferTo(thumbnailPath.toFile());
 
-    public Video getVideoById(Long id){
-        return videoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Video not found with id: " + id));
+        return thumbnailFileName;
     }
 }
