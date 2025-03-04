@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class VideoServiceTest {
+public class VideoServiceDeleteTest {
 
     @Mock
     private VideoRepository videoRepository;
@@ -117,5 +117,7 @@ public class VideoServiceTest {
 
     // 파일 삭제 실패 케이스는 static 메서드인 Files.delete()를 모의(mock)하기 어려워
     // PowerMockito와 같은 도구를 사용해야 하나, 여기서는 생략합니다.
+
+
 }
 

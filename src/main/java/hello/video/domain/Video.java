@@ -62,5 +62,11 @@ public class Video {
     private LocalDateTime uploadDate;
 
 
-
+    public void updateVideo(String title, String description, String thumbnailPath, String thumbnailUrl) {
+        // 내부적으로 직접 필드에 접근하여 업데이트 (setter 없이 같은 클래스 내부에서는 접근 가능)
+        this.title = title;
+        this.description = description;
+        this.thumbnailPath = thumbnailPath;
+        this.thumbnailUrl = thumbnailUrl;
+    }
 }

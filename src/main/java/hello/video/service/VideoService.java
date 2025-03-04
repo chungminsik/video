@@ -103,10 +103,46 @@ public class VideoService {
     @Transactional
     public List<Video> updateVideo(Long videoId, String editTitle, String editDescription, MultipartFile editThumbnailFile){
 
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new RuntimeException("비디오를 찾을 수 없습니다."));
 
+        // 새 썸네일 파일이 제공된 경우 처리
+        if (editThumbnailFile != null && !editThumbnailFile.isEmpty()) {
 
+            if (!editThumbnailFile.getContentType().startsWith("image/")) {
+                throw new IllegalArgumentException("썸네일은 이미지 파일만 가능합니다.");
+            }
 
-        return null;
+            // 기존 썸네일 파일 삭제 (파일이 존재하면 삭제)
+            Path oldThumbnailPath = Paths.get(video.getThumbnailPath());
+            try {
+                Files.deleteIfExists(oldThumbnailPath);
+            } catch (IOException e) {
+                throw new RuntimeException("기존 썸네일 삭제에 실패했습니다: " + e.getMessage(), e);
+            }
+
+            // 새 썸네일 파일 저장
+            String newThumbnailFileName = UUID.randomUUID().toString() + "_" + editThumbnailFile.getOriginalFilename();
+            // 실제 파일 저장 경로 (프로젝트 환경에 맞게 조정)
+            Path newThumbnailPath = Paths.get(thumbnailPath, newThumbnailFileName);
+            try {
+                Files.copy(editThumbnailFile.getInputStream(), newThumbnailPath);
+            } catch (IOException e) {
+                throw new RuntimeException("새 썸네일 저장에 실패했습니다: " + e.getMessage(), e);
+            }
+
+            // 엔티티 업데이트: 제목, 설명, 새 썸네일 파일 경로/URL 적용
+            // (비디오 엔티티에 updateVideo(...)와 같은 도메인 메서드를 추가했다고 가정)
+            video.updateVideo(editTitle, editDescription,
+                    newThumbnailPath.toString(), "/url/to/thumbnails/" + newThumbnailFileName);
+        } else {
+            // 썸네일 파일이 없는 경우, 제목과 설명만 업데이트
+            video.updateVideo(editTitle, editDescription,
+                    video.getThumbnailPath(), video.getThumbnailUrl());
+        }
+
+        // 변경된 엔티티는 트랜잭션 내에서 자동으로 반영되므로, 수정 후 최신 목록을 반환
+        return getVideoList();
     }
 
 

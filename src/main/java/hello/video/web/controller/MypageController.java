@@ -1,16 +1,12 @@
 package hello.video.web.controller;
 
-import hello.video.domain.User;
 import hello.video.domain.Video;
 import hello.video.domain.dto.MypageDTO;
 import hello.video.service.UserService;
 import hello.video.service.VideoService;
 import hello.video.web.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,7 +55,6 @@ public class MypageController {
         return "redirect:/mypage";
     }
 
-    //TODO 수정기능
     @PostMapping("/mypage/editVideo")
     public String editVideo(@AuthenticationPrincipal CustomUserDetails userDetails,
                             @RequestParam("editVideoId") Long id,
@@ -74,7 +69,7 @@ public class MypageController {
             return "";
         }
 
-
+        videoService.updateVideo(id, editTitle, editDescription, editThumbnailFile);
 
         return "redirect:/mypage";
     }
