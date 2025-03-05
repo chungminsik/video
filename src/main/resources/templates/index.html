@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동영상 플랫폼 - 메인</title>
+    <title>動画プラットフォーム - メイン</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -14,43 +14,43 @@
     </style>
 </head>
 <body>
-<!-- 상단 네비게이션 바 -->
+<!-- 上部ナビゲーションバー -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/">동영상 플랫폼</a>
+        <a class="navbar-brand fw-bold" href="/">動画プラットフォーム</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/mypage">마이페이지</a>
+                    <a class="nav-link" href="/mypage">マイページ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">로그아웃</a>
+                    <a class="nav-link" href="/logout">ログアウト</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<!-- 메인 컨텐츠 영역 -->
+<!-- メインコンテンツエリア -->
 <div class="container mt-4">
     <div class="row">
-        <!-- 동영상 썸네일 카드 반복 렌더링 -->
+        <!-- 動画サムネイルカードの繰り返しレンダリング -->
         <div class="col-md-4 mb-4" th:each="video : ${videos}">
             <div class="card">
-                <!-- 썸네일 이미지 -->
-                <img th:src="@{${video.thumbnailUrl}}" class="card-img-top" alt="썸네일">
+                <!-- サムネイル画像 -->
+                <img th:src="@{${video.thumbnailUrl}}" class="card-img-top" alt="サムネイル">
                 <div class="card-body">
-                    <!-- 동영상 제목 (링크) -->
+                    <!-- 動画タイトル（リンク） -->
                     <h5 class="card-title">
-                        <a th:href="@{/videos/{id}(id=${video.id})}" class="text-decoration-none text-dark" th:text="${video.title}">동영상 제목</a>
+                        <a th:href="@{/videos/{id}(id=${video.id})}" class="text-decoration-none text-dark" th:text="${video.title}">動画タイトル</a>
                     </h5>
-                    <!-- 업로더 및 업로드 날짜 -->
+                    <!-- アップローダーおよびアップロード日 -->
                     <p class="card-text">
-                        <!--<small class="text-muted" th:text="'업로더: ' + ${video.user.userName}"></small><br> -->
-                        <!--<small class="text-muted" th:text="'업로드 날짜: ' + ${#dates.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></small>-->
+                        <!--<small class="text-muted" th:text="'アップローダー: ' + ${video.user.userName}"></small><br> -->
+                        <!--<small class="text-muted" th:text="'アップロード日: ' + ${#dates.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></small>-->
                     </p>
                 </div>
             </div>

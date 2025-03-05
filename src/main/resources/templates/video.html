@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동영상 시청</title>
+    <title>動画視聴</title>
     <style>
         body, html {
             margin: 0;
@@ -41,13 +41,13 @@
 </head>
 <body>
 <div class="video-container">
-    <!-- 동영상 플레이어 -->
+    <!-- 動画プレイヤー -->
     <video controls autoplay>
         <source th:src="@{/videos/watch/{id}(id=${video.id})}" type="video/mp4">
-        동영상을 지원하지 않는 브라우저입니다.
+        このブラウザは動画をサポートしていません。
     </video>
 
-    <!-- 동영상 제목 -->
+    <!-- 動画タイトル -->
     <div class="video-title" th:text="${video.title}"></div>
 </div>
 </body>
