@@ -92,29 +92,15 @@ erDiagram
     USER ||--o{ VIDEOLIKE : "1:N"
     VIDEO ||--o{ VIDEOLIKE : "1:N"
 ```
-
----
-
-## セットアップ & 実行方法
-### **1️⃣ 環境構築**
-- JDK 17 以上をインストール
-- MySQL (DB: `video_db`) をセットアップ
-- `application.yml` にデータベース情報を設定
-
-### **アクセス**
-- **アプリ URL:** `http://localhost:8080`
-- **管理者ユーザー:** 初期設定なし（DB で直接登録）
-
 ---
 
 ## スクリーンショット
 ### 로그인 & 회원가입
 このプラットフォームは必ず会員登録が必要です。ログインするために会員登録を行ってください。
-
-<img width="1407" alt="Image" src="https://github.com/user-attachments/assets/04d92721-badf-48a2-a02d-78e8c8610491" />
+<img width="1436" alt="Image" src="https://github.com/user-attachments/assets/e40272d6-cf45-4c89-ab8d-cff94a7af480" />
 
 会員登録が完了したら、ログインを行ってください。
-[image]
+<img width="1424" alt="Image" src="https://github.com/user-attachments/assets/762602fe-886b-4a30-8c74-92ab67a7450a" />
 
 ### 홈화면
 ログインすると、他のメンバーがアップロードした動画をすべて閲覧できます。
@@ -125,21 +111,18 @@ erDiagram
 
 ### 마이페이지
 マイページでは、自分がアップロードした動画を管理できます。
-[image]
+<img width="1407" alt="Image" src="https://github.com/user-attachments/assets/04d92721-badf-48a2-a02d-78e8c8610491" />
 
-動画をアップロードするには、動画ファイルをアップロードし、動画のタイトルと説明、サムネイル画像を設定します。[image]
+動画をアップロードするには、動画ファイルをアップロードし、動画のタイトルと説明、サムネイル画像を設定します。動画を編集する際は、タイトル、説明、サムネイルのみ編集可能です。
+<img width="1422" alt="Image" src="https://github.com/user-attachments/assets/9d53cc4f-f2ad-4f34-9b49-272786feca52" />
 
-動画をアップロードすると、「自分の動画」とホーム画面に自分の動画が表示されます。[
-
-image]
-
-動画を編集する際は、タイトル、説明、サムネイルのみ編集可能です。
-
-[image]
+動画をアップロードすると、「自分の動画」とホーム画面に自分の動画が表示されます。
+<img width="1437" alt="Image" src="https://github.com/user-attachments/assets/db548bb7-ec06-41df-bfb1-27e5beb2e87d" />
 
 ---
 
 ## 今後のアップデート予定
+- ✅ **いいね機能**: 好きな動画にいいをつける機能
 - ✅ **検索機能**: タイトルや説明で動画を検索できるようにする
 - ✅ **コメント機能**: 動画にコメントを追加できる機能
 
