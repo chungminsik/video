@@ -33,10 +33,10 @@ graph TD;
     end
 
     subgraph サーバー["Spring Boot サーバー"]
-        Controller["コントローラー\n(リクエスト処理)"]
-        Service["サービス\n(ビジネスロジック)"]
-        Repository["リポジトリ\n(Spring Data JPA)"]
-        Security["Spring Security\n(認証 & 認可)"]
+        Controller["コントローラー(リクエスト処理)"]
+        Service["サービス(ビジネスロジック)"]
+        Repository["リポジトリ(Spring Data JPA)"]
+        Security["Spring Security(認証 & 認可)"]
     end
 
     subgraph データベース["Database"]
@@ -92,52 +92,55 @@ erDiagram
     USER ||--o{ VIDEOLIKE : "1:N"
     VIDEO ||--o{ VIDEOLIKE : "1:N"
 ```
-
----
-
-## セットアップ & 実行方法
-### **1️⃣ 環境構築**
-- JDK 17 以上をインストール
-- MySQL (DB: `video_db`) をセットアップ
-- `application.yml` にデータベース情報を設定
-
-### **アクセス**
-- **アプリ URL:** `http://localhost:8080`
-- **管理者ユーザー:** 初期設定なし（DB で直接登録）
-
 ---
 
 ## スクリーンショット
 ### 로그인 & 회원가입
-이 플랫폼은 반드시 회원가입이 필요합니다. 로그인을 위해 회원가입을 해줍니다.
-[image]
+このプラットフォームは必ず会員登録が必要です。ログインするために会員登録を行ってください。
+<img width="1436" alt="Image" src="https://github.com/user-attachments/assets/e40272d6-cf45-4c89-ab8d-cff94a7af480" />
 
-회원가입이 완료 되면 로그인을 해줍니다.
-[image]
+会員登録が完了したら、ログインを行ってください。
+<img width="1424" alt="Image" src="https://github.com/user-attachments/assets/762602fe-886b-4a30-8c74-92ab67a7450a" />
 
 ### 홈화면
-로그인을 하면 다른 맴버들이 업로드한 동영상을 전부 열람 가능하다
+ログインすると、他のメンバーがアップロードした動画をすべて閲覧できます。
 [image]
 
-동영상 제목을 누르면 동영상을 시청할 수 있습니다.
+動画のタイトルをクリックすると、動画を視聴できます。
 [image]
 
 ### 마이페이지
-마이페이지에서는 자신이 업로드한 동영상에 대한 관리를 할 수 있습니다.
-[image]
+マイページでは、自分がアップロードした動画を管理できます。
+<img width="1407" alt="Image" src="https://github.com/user-attachments/assets/04d92721-badf-48a2-a02d-78e8c8610491" />
 
-동영상을 업로드 하기 위해서는 동영상을 업로드하고, 동영상 제목과 설명, 썸네일 사진을 업로드 합니다.
-[image]
+動画をアップロードするには、動画ファイルをアップロードし、動画のタイトルと説明、サムネイル画像を設定します。動画を編集する際は、タイトル、説明、サムネイルのみ編集可能です。
+<img width="1422" alt="Image" src="https://github.com/user-attachments/assets/9d53cc4f-f2ad-4f34-9b49-272786feca52" />
 
-동영상을 업로드하면 내 동영상과 홈화면에 자신의 동영상이 표시됩니다.
-[image]
+動画をアップロードすると、「自分の動画」とホーム画面に自分の動画が表示されます。
+<img width="1437" alt="Image" src="https://github.com/user-attachments/assets/db548bb7-ec06-41df-bfb1-27e5beb2e87d" />
 
-동영상을 수정할 때는 제목, 설명, 썸네일만 수정가능합니다.
-[image]
+---
+
+## セットアップ & 実行方法
+### プロジェクト設定
+1. ファイルをダウンロード  
+2. Java 17 以上のバージョンを推奨  
+3. Gradle を使用してプロジェクトをビルド  
+4. データベース設定を完了するまで実行不可  
+
+### データベース設定
+1. `application.yml` ファイルでデータベースの設定を行う（yml ファイルでポートを設定）  
+2. データベースは事前に作成しておく必要がある（テーブルはアプリケーションの実行時に自動生成）  
+3. DB 設定が完了したら、`main()` でプロジェクトを実行可能  
+
+### ファイルパス設定  
+1. 実際の動画ファイルとサムネイル画像を保存するフォルダを作成  
+2. フォルダのパスを `video-path` と `thumbnail-path` に設定  
 
 ---
 
 ## 今後のアップデート予定
+- ✅ **いいね機能**: 好きな動画にいいをつける機能
 - ✅ **検索機能**: タイトルや説明で動画を検索できるようにする
 - ✅ **コメント機能**: 動画にコメントを追加できる機能
 
