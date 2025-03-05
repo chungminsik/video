@@ -33,10 +33,10 @@ graph TD;
     end
 
     subgraph サーバー["Spring Boot サーバー"]
-        Controller["コントローラー\n(リクエスト処理)"]
-        Service["サービス\n(ビジネスロジック)"]
-        Repository["リポジトリ\n(Spring Data JPA)"]
-        Security["Spring Security\n(認証 & 認可)"]
+        Controller["コントローラー(リクエスト処理)"]
+        Service["サービス(ビジネスロジック)"]
+        Repository["リポジトリ(Spring Data JPA)"]
+        Security["Spring Security(認証 & 認可)"]
     end
 
     subgraph データベース["Database"]
