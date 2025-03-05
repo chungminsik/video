@@ -37,7 +37,7 @@ spring:
 # 파일 경로 설정
 file:
   upload:
-    #video-path: /Users/jeongminsig/coding/Java/uploads/videos/
-    #thumbnail-path: /Users/jeongminsig/coding/Java/uploads/thumbnails/
-    video-path: C:/coding/Java project/uploads/videos/
-    thumbnail-path: C:/coding/Java project/uploads/thumbnails/
+    video-path: /Users/jeongminsig/coding/Java/uploads/videos/
+    thumbnail-path: /Users/jeongminsig/coding/Java/uploads/thumbnails/
+    #video-path: C:/coding/Java project/uploads/videos/
+    #thumbnail-path: C:/coding/Java project/uploads/thumbnails/

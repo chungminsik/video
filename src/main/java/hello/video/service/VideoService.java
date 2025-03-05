@@ -145,7 +145,6 @@ public class VideoService {
         return getVideoList();
     }
 
-
     @Transactional
     public List<Video> HardDeleteVideo(Long videoId, String userName){
         // 비디오 존재 여부 확인
@@ -179,7 +178,6 @@ public class VideoService {
 
         return getVideoList();
     }
-
 
     public ResponseEntity<Resource> getVideoStream(Long id, String rangeHeader) {
         try{
