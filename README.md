@@ -95,28 +95,28 @@ erDiagram
 ---
 
 ## スクリーンショット
-### 로그인 & 회원가입
+### ログイン & 会員登録
 このプラットフォームは必ず会員登録が必要です。ログインするために会員登録を行ってください。
 <img width="1436" alt="Image" src="https://github.com/user-attachments/assets/e40272d6-cf45-4c89-ab8d-cff94a7af480" />
 
 会員登録が完了したら、ログインを行ってください。
 <img width="1424" alt="Image" src="https://github.com/user-attachments/assets/762602fe-886b-4a30-8c74-92ab67a7450a" />
 
-### 홈화면
+### ホーム画面
 ログインすると、他のメンバーがアップロードした動画をすべて閲覧できます。
-[image]
+<img width="1470" alt="Image" src="https://github.com/user-attachments/assets/e36ad618-80e0-40ec-bf1b-a87475ad58aa" />
 
 動画のタイトルをクリックすると、動画を視聴できます。
-[image]
+<img width="1470" alt="Image" src="https://github.com/user-attachments/assets/268a12f2-47b7-40f4-823d-7e51ef1ba18f" />
 
-### 마이페이지
+### マイページ
 マイページでは、自分がアップロードした動画を管理できます。
 <img width="1407" alt="Image" src="https://github.com/user-attachments/assets/04d92721-badf-48a2-a02d-78e8c8610491" />
 
 動画をアップロードするには、動画ファイルをアップロードし、動画のタイトルと説明、サムネイル画像を設定します。動画を編集する際は、タイトル、説明、サムネイルのみ編集可能です。
 <img width="1422" alt="Image" src="https://github.com/user-attachments/assets/9d53cc4f-f2ad-4f34-9b49-272786feca52" />
 
-動画をアップロードすると、「自分の動画」とホーム画面に自分の動画が表示されます。
+動画をアップロードすると、「マイ動画」とホーム画面に自分の動画が表示されます。
 <img width="1437" alt="Image" src="https://github.com/user-attachments/assets/db548bb7-ec06-41df-bfb1-27e5beb2e87d" />
 
 ---
