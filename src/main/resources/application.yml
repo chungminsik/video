@@ -21,6 +21,7 @@ spring:
       name: admin
       password: admin
 
+#JPA 설정
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
@@ -33,6 +34,7 @@ spring:
     hibernate:
       ddl-auto: update       # 테이블 생성 전략
 
+# 파일 경로 설정
 file:
   upload:
     #video-path: /Users/jeongminsig/coding/Java/uploads/videos/
