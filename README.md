@@ -104,10 +104,10 @@ erDiagram
 
 ### ホーム画面
 ログインすると、他のメンバーがアップロードした動画をすべて閲覧できます。
-<img width="1470" alt="Image" src="https://github.com/user-attachments/assets/e36ad618-80e0-40ec-bf1b-a87475ad58aa" />
+<img width="1424" alt="Image" src="https://github.com/user-attachments/assets/a650640e-1fde-41af-9c90-8d9da1d9eab7" />
 
 動画のタイトルをクリックすると、動画を視聴できます。
-<img width="1470" alt="Image" src="https://github.com/user-attachments/assets/268a12f2-47b7-40f4-823d-7e51ef1ba18f" />
+<img width="1439" alt="Image" src="https://github.com/user-attachments/assets/04ee22b3-0ba9-41b0-8ea7-79c3f38f49ef" />
 
 ### マイページ
 マイページでは、自分がアップロードした動画を管理できます。
