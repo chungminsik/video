@@ -44,7 +44,9 @@ public class VideoService {
     private final String thumbnailUrlPrefix = "/thumbnails/";
 
     public List<Video> getVideoList(){
-        List<Video> videoList = videoRepository.findAll();
+        //List<Video> videoList = videoRepository.findAll();
+        List<Video> videoList = videoRepository.findAllWithUserOrderedByUploadDate();
+
         return videoList;
     }
 
