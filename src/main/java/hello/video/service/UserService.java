@@ -2,7 +2,7 @@ package hello.video.service;
 
 import hello.video.domain.User;
 import hello.video.domain.Video;
-import hello.video.domain.dto.MypageDTO;
+import hello.video.domain.dto.UserProfileResponseDTO;
 import hello.video.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,14 +38,14 @@ public class UserService {
     }
 
     @Transactional
-    public MypageDTO getMypageDTO(String email){
+    public UserProfileResponseDTO getMypageDTO(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("회원가입 되어있지 않은 이메일 입니다 : " + email));
 
         List<Video> videos = user.getVideos();
         videos.size();
 
-        return new MypageDTO(user, videos);
+        return new UserProfileResponseDTO(user, videos);
     }
 
     public User findUserByEmail(String email){

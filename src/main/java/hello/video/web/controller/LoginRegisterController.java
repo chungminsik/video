@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class LoginRegisterController {
 
     private final UserService userService;
 

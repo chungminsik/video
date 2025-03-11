@@ -1,7 +1,7 @@
 package hello.video.web.controller;
 
 import hello.video.domain.Video;
-import hello.video.domain.dto.MypageDTO;
+import hello.video.domain.dto.UserProfileResponseDTO;
 import hello.video.service.UserService;
 import hello.video.service.VideoService;
 import hello.video.web.security.CustomUserDetails;
@@ -25,8 +25,8 @@ public class MypageController {
 
     @GetMapping("/mypage")
     public String getMypage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model){
-        MypageDTO mypageDTO = userService.getMypageDTO(userDetails.getUsername());
-        model.addAttribute("mypage", mypageDTO);
+        UserProfileResponseDTO userProfileResponseDTO = userService.getMypageDTO(userDetails.getUsername());
+        model.addAttribute("mypage", userProfileResponseDTO);
 
         return "mypage";
     }
@@ -63,7 +63,7 @@ public class MypageController {
                             @RequestParam(value = "editThumbnailFile", required = false) MultipartFile editThumbnailFile,
                             Model model
                             ){
-        MypageDTO customUser = userService.getMypageDTO(userDetails.getUsername());
+        UserProfileResponseDTO customUser = userService.getMypageDTO(userDetails.getUsername());
 
         if (customUser == null){
             return "";
