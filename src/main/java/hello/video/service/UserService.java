@@ -3,6 +3,7 @@ package hello.video.service;
 import hello.video.domain.User;
 import hello.video.domain.Video;
 import hello.video.domain.dto.UserProfileResponseDTO;
+import hello.video.domain.dto.UserRegisterRequestDTO;
 import hello.video.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,22 +24,26 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User registerUser_ROLE_USER(User user){
+    public User registerUser_ROLE_USER(UserRegisterRequestDTO userRegisterRequestDTO){
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(userRegisterRequestDTO.getEmail()).isPresent()) {
             throw new IllegalArgumentException("이미 사용중인 이메일 입니다");
         }
 
-        user.setRole("ROLE_USER");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User user = new User(
+                userRegisterRequestDTO.getUserName(),
+                passwordEncoder.encode(userRegisterRequestDTO.getPassword()),
+                userRegisterRequestDTO.getEmail()
+        );
 
+        user.setRole("ROLE_USER");
         User saveUser = userRepository.save(user);
 
         return saveUser;
     }
 
     @Transactional
-    public UserProfileResponseDTO getMypageDTO(String email){
+    public UserProfileResponseDTO getUserProfileData(String email){
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("회원가입 되어있지 않은 이메일 입니다 : " + email));
 

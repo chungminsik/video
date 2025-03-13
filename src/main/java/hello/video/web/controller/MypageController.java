@@ -25,7 +25,7 @@ public class MypageController {
 
     @GetMapping("/mypage")
     public String getMypage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model){
-        UserProfileResponseDTO userProfileResponseDTO = userService.getMypageDTO(userDetails.getUsername());
+        UserProfileResponseDTO userProfileResponseDTO = userService.getUserProfileData(userDetails.getUsername());
         model.addAttribute("mypage", userProfileResponseDTO);
 
         return "mypage";
@@ -63,7 +63,7 @@ public class MypageController {
                             @RequestParam(value = "editThumbnailFile", required = false) MultipartFile editThumbnailFile,
                             Model model
                             ){
-        UserProfileResponseDTO customUser = userService.getMypageDTO(userDetails.getUsername());
+        UserProfileResponseDTO customUser = userService.getUserProfileData(userDetails.getUsername());
 
         if (customUser == null){
             return "";

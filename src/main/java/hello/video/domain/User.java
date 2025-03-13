@@ -13,6 +13,16 @@ import java.util.List;
 @Getter
 @Setter
 public class User {
+
+    public User(){}
+
+    //register 작업시 화면에서 가져오는 데이터
+    public User(String userName, String password, String email){
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
