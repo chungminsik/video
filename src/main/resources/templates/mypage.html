@@ -56,7 +56,7 @@
 
                 <!-- モーダルボディ -->
                 <div class="modal-body">
-                    <form th:action="@{/mypage/upload}" method="post" enctype="multipart/form-data">
+                    <form th:action="@{/mypage/upload}" th:object="${uploadDto}" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="videoFile" class="form-label">動画ファイル</label>
                             <input type="file" class="form-control" id="videoFile" name="file" required>
@@ -121,8 +121,9 @@
 
                 <!-- モーダルボディ -->
                 <div class="modal-body">
-                    <form th:action="@{/mypage/editVideo}" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="editVideoId" id="editVideoId">
+                    <form th:action="@{/mypage/editVideo}" th:object="${editDto}" method="post" enctype="multipart/form-data">
+                        <!--<input type="hidden" name="editVideoId" id="editVideoId">-->
+                        <input type="hidden" th:field="*{id}" id="editVideoId">
 
                         <div class="mb-3">
                             <label for="editTitle" class="form-label">タイトル</label>

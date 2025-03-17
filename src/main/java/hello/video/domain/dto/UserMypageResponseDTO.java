@@ -10,9 +10,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UserProfileResponseDTO {
+public class UserMypageResponseDTO {
 
-    public UserProfileResponseDTO(User user, List<Video> videos){
+    public UserMypageResponseDTO(User user, List<Video> videos){
         this.id = user.getId();
         this.userName = user.getUserName();
         this.email = user.getEmail();

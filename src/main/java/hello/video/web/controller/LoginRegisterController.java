@@ -1,6 +1,7 @@
 package hello.video.web.controller;
 
 import hello.video.domain.User;
+import hello.video.domain.dto.UserLoginRequestDTO;
 import hello.video.domain.dto.UserRegisterRequestDTO;
 import hello.video.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,8 @@ public class LoginRegisterController {
 
     @GetMapping("/login")
     public String getLoginForm(Model model){
-        model.addAttribute("user", new User());
+
+        model.addAttribute("user", new UserLoginRequestDTO());
         return "login";
     }
 }
