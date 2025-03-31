@@ -9,13 +9,22 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 2GB
-      max-request-size: 2GB
+      #max-file-size: 2GB
+      #max-request-size: 2GB
+      max-file-size: 500MB
+      max-request-size: 500MB
+
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/video?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: 1234
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/video?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    #username: root
+    #password: 1234
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+
   security:
     user:
       name: admin
@@ -23,7 +32,7 @@ spring:
 
 #JPA 설정
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    #database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
     show-sql: true
     properties:
@@ -37,7 +46,13 @@ spring:
 # 파일 경로 설정
 file:
   upload:
-    video-path: /Users/jeongminsig/coding/Java/uploads/videos/
-    thumbnail-path: /Users/jeongminsig/coding/Java/uploads/thumbnails/
+    #LocalMac
+    #video-path: /Users/jeongminsig/coding/Java/uploads/videos/
+    #thumbnail-path: /Users/jeongminsig/coding/Java/uploads/thumbnails/
+
+    #LocalWindows
     #video-path: C:/coding/Java project/uploads/videos/
     #thumbnail-path: C:/coding/Java project/uploads/thumbnails/
+
+    video-path: /tmp/uploads/videos/
+    thumbnail-path: /tmp/uploads/thumbnails/

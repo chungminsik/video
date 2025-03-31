@@ -36,6 +36,14 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
+}
+
+bootJar {
+	archiveBaseName = 'app'// 원하는 이름
+	archiveVersion = ''// 버전 제거
+	archiveClassifier = ''// 부가 식별자 제거
 }
 
 tasks.named('test') {
