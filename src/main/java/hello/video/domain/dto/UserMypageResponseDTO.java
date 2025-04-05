@@ -16,16 +16,30 @@ public class UserMypageResponseDTO {
         this.id = user.getId();
         this.userName = user.getUserName();
         this.email = user.getEmail();
-        this.videos = videos;
+        this.videos = convertToVideoResponseList(videos);
         this.createdTime = user.getCreatedTime();
         this.role = user.getRole();
+        this.likeCount = calculateTotalLikeCount(videos);
     }
 
     private Long id;
     private String userName;
     private String email;
-    private List<Video> videos;
+    private List<VideoMypageResponseDTO> videos;
     private LocalDateTime createdTime;
     private String role;
+    private Long likeCount;
 
+
+    private List<VideoMypageResponseDTO> convertToVideoResponseList(List<Video> videos) {
+        return videos.stream()
+                .map(VideoMypageResponseDTO::new)
+                .toList();
+    }
+
+    private Long calculateTotalLikeCount(List<Video> videos) {
+        return videos.stream()
+                .mapToLong(v -> v.getLikes() != null ? v.getLikes().size() : 0)
+                .sum();
+    }
 }

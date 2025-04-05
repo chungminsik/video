@@ -2,9 +2,7 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>動画プラットフォーム - メイン</title>
-    <!-- Bootstrap CSS -->
+    <title>動画プラットフォーム</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .card-img-top {
@@ -12,13 +10,61 @@
             object-fit: cover;
         }
     </style>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
-        document.addEventListener("DOMContentLoaded", function(){
+</head>
+<body>
+    <!-- 上部ナビゲーションバー -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">動画プラットフォーム</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mypage">マイページ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">ログアウト</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="video : ${videos}">
+                <div class="card">
+                    <img th:src="@{${video.thumbnailUrl}}" class="card-img-top" alt="サムネイル">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{/videos/{id}(id=${video.id})}" th:text="${video.title}">動画タイトル</a>
+                        </h5>
+                        <p class="card-text">
+                            <small class="text-muted" th:text="'アップローダー: ' + ${video.user.userName}"></small><br>
+                            <small class="text-muted ms-2">
+                                📅 <span th:text="${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
+                            </small>
+                        </p>
+                        <button class="like-btn btn btn-light"
+                                th:data-video-id="${video.id}"
+                                th:data-is-liked="${video.likedByCurrentUser}"
+                                th:text="${video.likedByCurrentUser} ? '❤️' : '🖤'"
+                                type="button">
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".like-btn").forEach(button => {
-                button.addEventListener("click", function(){
+                button.addEventListener("click", function () {
                     const videoId = this.dataset.videoId;
-                    const isLiked = this.dataset.isLiked === true; //버튼을 눌렀을 때 좋아요 상태
+                    const isLiked = this.dataset.isLiked === "true"; // 문자열 비교!!
 
                     fetch("/like", {
                         method: "POST",
@@ -26,70 +72,26 @@
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            videoId: videoId
+                            videoId: videoId,
+                            isLiked: !isLiked  // true면 좋아요 취소, false면 좋아요 추가
                         })
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                this.dataset.isLiked = isLiked ? "false" : "true";
-                                this.innerHTML = isLiked ? "🖤" : "❤️";
+                                this.dataset.isLiked = (!isLiked).toString(); // 반전 상태 저장
+                                this.innerHTML = !isLiked ? "❤️" : "🖤";      // 이모티콘 토글
                             } else {
-                                alert("서버 오류 : 좋아요 실패!");
+                                alert("좋아요 요청 실패!");
                             }
                         })
-                        .catch(error => console.error("오류 : ", error));
+                        .catch(error => {
+                            console.error("오류 발생: ", error);
+                            alert("서버 통신 실패!");
+                        });
                 });
             });
         });
     </script>
-</head>
-<body>
-<!-- 上部ナビゲーションバー -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/">動画プラットフォーム</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/mypage">マイページ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">ログアウト</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- メインコンテンツエリア -->
-<div class="container mt-4">
-    <div class="row">
-        <!-- 動画サムネイルカードの繰り返しレンダリング -->
-        <div class="col-md-4 mb-4" th:each="video : ${videos}">
-            <div class="card">
-                <!-- サムネイル画像 -->
-                <img th:src="@{${video.thumbnailUrl}}" class="card-img-top" alt="サムネイル">
-                <div class="card-body">
-                    <!-- 動画タイトル（リンク） -->
-                    <h5 class="card-title">
-                        <a th:href="@{/videos/{id}(id=${video.id})}" class="text-decoration-none text-dark" th:text="${video.title}">動画タイトル</a>
-                    </h5>
-                    <!-- アップローダーおよびアップロード日 -->
-                    <p class="card-text">
-                        <small class="text-muted" th:text="'アップローダー: ' + ${video.user.userName}"></small><br>
-                        <small class="text-muted" th:text="'アップロード日: ' + ${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></small>
-                    </p>
-                    <button class="like-btn" th:data-video-id="${video.id}" th:data-is-liked="false">
-                        🖤
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>

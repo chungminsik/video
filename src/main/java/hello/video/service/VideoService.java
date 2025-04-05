@@ -46,7 +46,8 @@ public class VideoService {
 
     public List<Video> getVideoList(){
         //List<Video> videoList = videoRepository.findAll();
-        List<Video> videoList = videoRepository.findAllWithUserOrderedByUploadDate();
+        //List<Video> videoList = videoRepository.findAllWithUserOrderedByUploadDate();
+        List<Video> videoList = videoRepository.getVideoListWithLikes();
 
         return videoList;
     }

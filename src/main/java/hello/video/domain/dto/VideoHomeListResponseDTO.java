@@ -12,12 +12,13 @@ public class VideoHomeListResponseDTO {
 
     public VideoHomeListResponseDTO(){}
 
-    public VideoHomeListResponseDTO(Long id, String thumbnailUrl, String title, User user, LocalDateTime uploadDate){
+    public VideoHomeListResponseDTO(Long id, String thumbnailUrl, String title, User user, LocalDateTime uploadDate, Boolean likedByCurrentUser){
         this.id = id;
         this.thumbnailUrl = thumbnailUrl;
         this.user = user;
         this.title = title;
         this.uploadDate = uploadDate;
+        this.likedByCurrentUser = likedByCurrentUser;
     }
 
     private Long id;
@@ -26,4 +27,5 @@ public class VideoHomeListResponseDTO {
     private User user;
     private LocalDateTime uploadDate;
 
+    private boolean likedByCurrentUser;
 }

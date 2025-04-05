@@ -35,8 +35,8 @@
 <div class="container mt-4">
     <!-- ユーザー情報 -->
     <h1 th:text="'こんにちは、' + ${mypage.userName} + 'さん！'">こんにちは、ユーザーさん！</h1>
-    <p th:text="'登録日: ' + ${mypage.createdTime}"></p>
-    <p th:text="'権限: ' + ${mypage.role}"></p>
+    <!--<p th:text="'登録日: ' + ${mypage.createdTime}"></p>-->
+    <!--<p th:text="'権限: ' + ${mypage.role}"></p>-->
 
     <!-- 動画リスト -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -90,8 +90,8 @@
                         <a th:href="@{/videos/{id}(id=${video.id})}" class="text-decoration-none" th:text="${video.title}"></a>
                     </h5>
                     <p class="card-text" th:text="${video.description}">動画説明</p>
-                    <p class="text-muted" th:text="'アップロード日: ' + ${video.uploadDate}"></p>
-                    <div class="d-flex justify-content-between">
+                    <p class="text-muted" th:text="'📅: ' + ${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></p>
+                    <p class="text-muted" th:text="'❤️: ' + (${mypage.likeCount} ?: 0)">❤️ : 0</p>                    <div class="d-flex justify-content-between">
                         <button
                                 class="btn btn-warning btn-sm"
                                 data-bs-toggle="modal"
@@ -134,7 +134,7 @@
                             <textarea class="form-control" id="editDescription" name="editDescription" rows="3" placeholder="動画説明"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="editThumbnailFile" class="form-label">サムネイル画像（任意）</label>
+                            <label for="editThumbnailFile" class="form-label">サムネイル画像</label>
                             <input type="file" class="form-control" id="editThumbnailFile" name="editThumbnailFile">
                         </div>
                         <button type="submit" class="btn btn-primary w-100">編集する</button>
