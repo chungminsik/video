@@ -82,7 +82,10 @@
 
     <!-- 動画一覧 -->
     <div class="row">
-        <div class="col-md-4 mb-4" th:each="video : ${mypage.videos}">
+        <!-- 動画がある場合 -->
+        <div class="col-md-4 mb-4"
+             th:each="video : ${mypage.videos}"
+             th:if="${mypage.videos != null and !mypage.videos.isEmpty()}">
             <div class="card">
                 <img th:src="@{${video.thumbnailUrl}}" class="card-img-top thumbnail-img" alt="サムネイル">
                 <div class="card-body">
@@ -91,9 +94,9 @@
                     </h5>
                     <p class="card-text" th:text="${video.description}">動画説明</p>
                     <p class="text-muted" th:text="'📅: ' + ${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></p>
-                    <p class="text-muted" th:text="'❤️: ' + (${mypage.likeCount} ?: 0)">❤️ : 0</p>                    <div class="d-flex justify-content-between">
-                        <button
-                                class="btn btn-warning btn-sm"
+                    <p class="text-muted" th:text="'❤️: ' + (${mypage.likeCount} ?: 0)">❤️ : 0</p>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-warning btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#editModal"
                                 th:attr="data-id=${video.id}, data-title=${video.title}, data-description=${video.description}, data-thumbnail=${video.thumbnailUrl}">
@@ -106,6 +109,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- 動画がない場合 -->
+        <div class="col-12 text-center py-5" th:if="${mypage.videos == null or mypage.videos.isEmpty()}">
+            <p class="text-muted fs-4">📭 まだアップロードした動画がありません。</p>
+            <p class="text-muted">右上の <strong>「動画アップロード」</strong> ボタンから動画を投稿してみましょう！</p>
         </div>
     </div>
 
