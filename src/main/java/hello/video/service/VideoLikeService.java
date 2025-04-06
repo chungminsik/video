@@ -3,6 +3,7 @@ package hello.video.service;
 import hello.video.domain.User;
 import hello.video.domain.Video;
 import hello.video.domain.VideoLike;
+import hello.video.domain.dto.VideoLikeCountResponseDTO;
 import hello.video.repository.UserRepository;
 import hello.video.repository.VideoLikeRepository;
 import hello.video.repository.VideoRepository;
@@ -45,4 +46,25 @@ public class VideoLikeService {
             videoLikeRepository.delete(like);
         }
     }
+
+    //vidoe를 리스트로 받나?
+    public void videoLikeCount(Video video){
+
+        //video에 대한 좋아요 갯수 계산
+
+
+        //VideoLikeCountResponseDTO에 저장해서 리턴 (이걸 화면에서 사용할 것임)
+
+
+
+
+    }
+
+
+    public void UserLikeVideo(User user){
+
+
+    }
+
+
 }
