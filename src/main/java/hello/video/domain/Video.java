@@ -69,4 +69,16 @@ public class Video {
         this.thumbnailPath = thumbnailPath;
         this.thumbnailUrl = thumbnailUrl;
     }
+
+    public void updateVideoViews(Video video){
+        this.title = video.getTitle();
+        this.description = video.getDescription();
+        this.filePath = video.getFilePath();
+        this.fileUrl = video.getFileUrl();
+        this.thumbnailPath = video.getThumbnailPath();
+        this.thumbnailUrl = video.getThumbnailUrl();
+        this.uploadDate = video.getUploadDate();
+        this.user = video.getUser();
+        this.views = video.getViews() + 1;
+    }
 }

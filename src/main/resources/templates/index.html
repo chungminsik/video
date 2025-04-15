@@ -55,10 +55,9 @@
                             <a th:href="@{/videos/{id}(id=${video.id})}" th:text="${video.title}">動画タイトル</a>
                         </h5>
                         <p class="card-text">
-                            <small class="text-muted" th:text="'アップローダー: ' + ${video.user.userName}"></small><br>
-                            <small class="text-muted ms-2">
-                                📅 <span th:text="${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
-                            </small>
+                            <small class="text-muted" th:text="'👤' + ${video.user.userName}"></small><br>
+                            <small class="text-muted" th:utext="'📅 ' + ${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></small><br>
+                            <small class="text-muted" th:text="'👁️‍' + ${video.views}"></small>
                         </p>
                         <button class="like-btn btn btn-light"
                                 th:data-video-id="${video.id}"

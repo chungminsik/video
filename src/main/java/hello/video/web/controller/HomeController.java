@@ -46,7 +46,8 @@ public class HomeController {
                     video.getTitle(),
                     video.getUser(),
                     video.getUploadDate(),
-                    likedByCurrentUser
+                    likedByCurrentUser,
+                    video.getViews()
             );
             returnList.add(videoDTO);
         }

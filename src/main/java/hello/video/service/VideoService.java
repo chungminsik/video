@@ -129,6 +129,7 @@ public class VideoService {
      * @param rangeHeader
      * @return rangeHeader가 있으면 요청이 온 부분부터 일정 부분까지만 리턴, rangeHeader가 없으면 전체 파일을 리턴
      */
+    @Transactional
     public ResponseEntity<Resource> getVideoStream(Long id, String rangeHeader) {
         try{
             //Id를 통해 요청이 들어온 동영상 검색(재생 화면을 열 때도 검색을 진행하는데 중복된 검색이 진행됨)
@@ -163,6 +164,12 @@ public class VideoService {
 
                 //206 Partial Content 응답 반환
                 InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(videoBytes));
+
+                //동영상을 3분의 1이상 보면 조회수 올리기(브라우저가 범위를 중복으로 부를 가능성도 있어 조회수가 중복될 가능성도 있음)
+                long viewCheck = videoLength/3;
+                if (start >= viewCheck){
+                    video.updateVideoViews(video);
+                }
 
                 return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                         .header(HttpHeaders.CONTENT_TYPE, "video/mp4")
