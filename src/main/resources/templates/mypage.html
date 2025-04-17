@@ -179,6 +179,44 @@
         modalDescriptionInput.value = description;
         modalIdInput.value = id;
     });
+
+    // 📌 업로드 시 파일 형식 및 크기 검사
+    document.addEventListener('DOMContentLoaded', function () {
+        const uploadForm = document.querySelector('#uploadModal form');
+        const videoInput = document.getElementById('videoFile');
+        const thumbnailInput = document.getElementById('thumbnailFile');
+
+        uploadForm.addEventListener('submit', function (event) {
+            const videoFile = videoInput.files[0];
+            const thumbnailFile = thumbnailInput.files[0];
+
+            const maxSizeMB = 50;
+            const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+            // ✅ 동영상 파일 검사
+            if (videoFile) {
+                if (!videoFile.type.startsWith("video/")) {
+                    alert("🎥 アップロードするファイルは動画形式（例: mp4）である必要があります。");
+                    event.preventDefault();
+                    return;
+                }
+                if (videoFile.size > maxSizeBytes) {
+                    alert(`⚠️ 動画ファイルのサイズは${maxSizeMB}MB以下である必要があります。`);
+                    event.preventDefault();
+                    return;
+                }
+            }
+
+            // ✅ 썸네일 이미지 검사 (선택된 경우만)
+            if (thumbnailFile) {
+                if (!thumbnailFile.type.startsWith("image/")) {
+                    alert("🖼️ サムネイルは画像形式（例: jpg, png）である必要があります。");
+                    event.preventDefault();
+                    return;
+                }
+            }
+        });
+    });
 </script>
 <footer class="text-dark pt-4 pb-2" style="background-color: #FFCC2F;">
     <div class="container">
