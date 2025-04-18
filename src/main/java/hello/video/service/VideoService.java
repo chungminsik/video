@@ -6,12 +6,14 @@ import hello.video.repository.UserRepository;
 import hello.video.repository.VideoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class VideoService {
 
     private final UserRepository userRepository;
@@ -165,11 +168,7 @@ public class VideoService {
                 //206 Partial Content 응답 반환
                 InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(videoBytes));
 
-                //동영상을 3분의 1이상 보면 조회수 올리기(브라우저가 범위를 중복으로 부를 가능성도 있어 조회수가 중복될 가능성도 있음)
-                long viewCheck = videoLength/3;
-                if (start >= viewCheck){
-                    video.updateVideoViews(video);
-                }
+                increaseVideoViews(video, videoLength, start);
 
                 return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                         .header(HttpHeaders.CONTENT_TYPE, "video/mp4")
@@ -194,6 +193,25 @@ public class VideoService {
 
         } catch (IOException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 조회수 올리는 메소드
+     * @param video
+     * @param videoLength
+     * @param start
+     */
+    private void increaseVideoViews(Video video, long videoLength, long start){
+        try{
+            //동영상을 3분의 1이상 보면 조회수 올리기(브라우저가 범위를 중복으로 부를 가능성도 있어 조회수가 중복될 가능성도 있음)
+            long viewCheck = videoLength/3;
+            if (start >= viewCheck){
+                video.increaseViews();
+                videoRepository.save(video);
+            }
+        } catch (ObjectOptimisticLockingFailureException e){
+            log.warn("조회수 증가 중 버전 충돌 발생. videoId={}, error={}", video.getId(), e.getMessage());
         }
     }
 

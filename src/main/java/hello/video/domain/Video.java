@@ -61,6 +61,9 @@ public class Video {
     @CreationTimestamp
     private LocalDateTime uploadDate;
 
+    //조회수 동시성 문제로 인한 update 버전 구분용
+    @Version
+    private int version;
 
     public void updateVideo(String title, String description, String thumbnailPath, String thumbnailUrl) {
         // 내부적으로 직접 필드에 접근하여 업데이트 (setter 없이 같은 클래스 내부에서는 접근 가능)
@@ -70,15 +73,7 @@ public class Video {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    public void updateVideoViews(Video video){
-        this.title = video.getTitle();
-        this.description = video.getDescription();
-        this.filePath = video.getFilePath();
-        this.fileUrl = video.getFileUrl();
-        this.thumbnailPath = video.getThumbnailPath();
-        this.thumbnailUrl = video.getThumbnailUrl();
-        this.uploadDate = video.getUploadDate();
-        this.user = video.getUser();
-        this.views = video.getViews() + 1;
+    public void increaseViews(){
+        this.views++;
     }
 }
