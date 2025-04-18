@@ -168,7 +168,8 @@ public class VideoService {
                 //206 Partial Content 응답 반환
                 InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(videoBytes));
 
-                increaseVideoViews(video, videoLength, start);
+                //조회수 증가
+                increaseVideoViews(video, start);
 
                 return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
                         .header(HttpHeaders.CONTENT_TYPE, "video/mp4")
@@ -197,7 +198,7 @@ public class VideoService {
     }
 
     /**
-     * 조회수 올리는 메소드
+     * 영상 1/3 봤을 때 조회수 올리는 메소드
      * @param video
      * @param videoLength
      * @param start
@@ -208,10 +209,32 @@ public class VideoService {
             long viewCheck = videoLength/3;
             if (start >= viewCheck){
                 video.increaseViews();
+
+                log.info("조회수 증가 시도 - videoId={}, start={}, viewCheck={}", video.getId(), start, viewCheck);
+
                 videoRepository.save(video);
             }
         } catch (ObjectOptimisticLockingFailureException e){
             log.warn("조회수 증가 중 버전 충돌 발생. videoId={}, error={}", video.getId(), e.getMessage());
+        }
+    }
+
+    /**
+     * 영상 시작시 조회수 올리는 메소드
+     * @param video
+     * @param start
+     */
+    private void increaseVideoViews(Video video, long start){
+        try {
+            if (start == 0) {
+                video.increaseViews(); // 조회수 증가
+                videoRepository.saveAndFlush(video); // 바로 반영
+                log.info("조회수 증가됨 - videoId={}, views={}", video.getId(), video.getViews());
+            }
+        } catch (ObjectOptimisticLockingFailureException e){
+            log.warn("조회수 증가 중 버전 충돌 - videoId={}, error={}", video.getId(), e.getMessage());
+        } catch (Exception e) {
+            log.error("조회수 저장 실패 - videoId={}, 예외={}", video.getId(), e.getMessage(), e);
         }
     }
 
