@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>動画プラットフォーム</title>
+    <title th:text="#{page.title}">動画プラットフォーム</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .card-img-top {
@@ -13,133 +13,127 @@
     </style>
 </head>
 <body>
-    <!-- 上部ナビゲーションバー -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">動画プラットフォーム</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav" aria-controls="navbarNav"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+<!-- 상단 네비게이션 바 -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/" th:text="#{page.title}">動画プラットフォーム</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <!-- 左側: 検索フォーム
-                <form class="d-flex ms-auto me-3" method="get" action="/search">
-                    <input class="form-control me-2" type="search" name="query" placeholder="動画を検索" aria-label="検索"
-                           style="width: 400px;">
-                    <button class="btn btn-outline-primary" type="submit">検索</button>
-                </form>
-                -->
-
-                <!-- 右側: メニュー -->
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/mypage">マイページ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">ログアウト</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        <div class="row">
-            <!-- 動画がある場合 -->
-            <div class="col-md-4 mb-4" th:each="video : ${videos}" th:if="${videos != null and !videos.isEmpty()}">
-                <div class="card">
-                    <img th:src="@{${video.thumbnailUrl}}" class="card-img-top" alt="サムネイル">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a th:href="@{/videos/{id}(id=${video.id})}" th:text="${video.title}">動画タイトル</a>
-                        </h5>
-                        <p class="card-text">
-                            <small class="text-muted" th:text="'👤' + ${video.user.userName}"></small><br>
-                            <small class="text-muted" th:utext="'📅 ' + ${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></small><br>
-                            <small class="text-muted" th:text="'👁️‍' + ${video.views}"></small>
-                        </p>
-                        <button class="like-btn btn btn-light"
-                                th:data-video-id="${video.id}"
-                                th:data-is-liked="${video.likedByCurrentUser}"
-                                th:text="${video.likedByCurrentUser} ? '❤️' : '🖤'"
-                                type="button">
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 動画がない場合 -->
-            <div class="col-12 text-center py-5" th:if="${videos == null or videos.isEmpty()}">
-                <p class="text-muted fs-4">🎬 現在、登録された動画がありません。</p>
-            </div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- 오른쪽: 메뉴 -->
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/mypage" th:text="#{page.nav.mypage}">マイページ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout" th:text="#{page.nav.logout}">ログアウト</a>
+                </li>
+            </ul>
         </div>
     </div>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".like-btn").forEach(button => {
-                button.addEventListener("click", function () {
-                    const videoId = this.dataset.videoId;
-                    const isLiked = this.dataset.isLiked === "true"; // 문자열 비교!!
+</nav>
 
-                    fetch("/like", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            videoId: videoId,
-                            isLiked: !isLiked  // true면 좋아요 취소, false면 좋아요 추가
-                        })
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                this.dataset.isLiked = (!isLiked).toString(); // 반전 상태 저장
-                                this.innerHTML = !isLiked ? "❤️" : "🖤";      // 이모티콘 토글
-                            } else {
-                                alert("좋아요 요청 실패!");
-                            }
-                        })
-                        .catch(error => {
-                            console.error("오류 발생: ", error);
-                            alert("서버 통신 실패!");
-                        });
-                });
-            });
-        });
-    </script>
-    <footer class="text-dark pt-4 pb-2" style="background-color: #FFCC2F;">
-        <div class="container">
-            <div class="row">
-                <!-- 언어 선택
-                <div class="col-md-4 mb-3">
-                    <div class="dropdown d-inline-block">
-                        <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            언어 선택
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="?lang=ko">🇰🇷 한국어</a></li>
-                            <li><a class="dropdown-item" href="?lang=en">🇺🇸 English</a></li>
-                            <li><a class="dropdown-item" href="?lang=ja">🇯🇵 日本語</a></li>
-                        </ul>
-                    </div>
+<div class="container mt-4">
+    <div class="row">
+        <!-- 동영상 리스트 -->
+        <div class="col-md-4 mb-4" th:each="video : ${videos}" th:if="${videos != null and !videos.isEmpty()}">
+            <div class="card">
+                <img th:src="@{${video.thumbnailUrl}}" class="card-img-top" alt="thumbnail">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a th:href="@{/videos/{id}(id=${video.id})}" th:text="${video.title}">動画タイトル</a>
+                    </h5>
+                    <p class="card-text">
+                        <small class="text-muted" th:text="'👤' + ${video.user.userName}"></small><br>
+                        <small class="text-muted" th:utext="'📅 ' + ${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></small><br>
+                        <small class="text-muted" th:text="'👁️‍' + ${video.views}"></small>
+                    </p>
+                    <button class="like-btn btn btn-light"
+                            th:data-video-id="${video.id}"
+                            th:data-is-liked="${video.likedByCurrentUser}"
+                            th:text="${video.likedByCurrentUser} ? '❤️' : '🖤'"
+                            type="button">
+                    </button>
                 </div>
-                -->
-                <!-- 소개 -->
-                <div class="text-center mt-4">
-                    <h5 class="fw-bold">😊 VideoProject</h5>
-                    <p>楽しく暖かい映像共有プラットフォームです！</p>
-                </div>
-            </div>
-            <hr class="border-dark">
-            <div class="text-center">
-                <p class="mb-0">&copy; 2025 VideoProject. 행복을 전하는 플랫폼 😊</p>
             </div>
         </div>
-    </footer>
+
+        <!-- 동영상이 없을 때 -->
+        <div class="col-12 text-center py-5" th:if="${videos == null or videos.isEmpty()}">
+            <p class="text-muted fs-4" th:text="#{video.none}">🎬 現在、登録された動画がありません。</p>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".like-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                const videoId = this.dataset.videoId;
+                const isLiked = this.dataset.isLiked === "true";
+
+                fetch("/like", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        videoId: videoId,
+                        isLiked: !isLiked
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.dataset.isLiked = (!isLiked).toString();
+                            this.innerHTML = !isLiked ? "❤️" : "🖤";
+                        } else {
+                            alert("좋아요 요청 실패!");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("오류 발생: ", error);
+                        alert("서버 통신 실패!");
+                    });
+            });
+        });
+    });
+</script>
+
+<footer class="text-dark pt-4 pb-2" style="background-color: #FFCC2F;">
+    <div class="container">
+        <div class="row">
+            <!-- 언어 선택 -->
+            <div class="col-md-4 mb-3">
+                <div class="dropdown d-inline-block">
+                    <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span th:text="#{language.select}">언어 선택</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="?lang=ko">🇰🇷 한국어</a></li>
+                        <li><a class="dropdown-item" href="?lang=en">🇺🇸 English</a></li>
+                        <li><a class="dropdown-item" href="?lang=ja">🇯🇵 日本語</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 소개 -->
+            <div class="text-center mt-4">
+                <h5 class="fw-bold">😊 VideoProject</h5>
+                <p th:text="#{footer.tagline}">楽しく暖かい映像共有プラットフォームです！</p>
+            </div>
+        </div>
+        <hr class="border-dark">
+        <div class="text-center">
+            <p class="mb-0" th:text="#{footer.rights}">&copy; 2025 VideoProject. 행복을 전하는 플랫폼 😊</p>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

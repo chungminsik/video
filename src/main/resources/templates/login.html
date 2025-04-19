@@ -1,37 +1,41 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html th:lang="${#locale}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>動画プラットフォーム - ログイン</title>
+    <title th:text="#{page.title}">動画プラットフォーム - ログイン</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 100vh;">
-    <!-- 上部タイトル -->
-    <h1 class="mb-4 fw-bold">動画プラットフォーム</h1>
+    <!-- 상단 타이틀 -->
+    <h1 class="mb-4 fw-bold" th:text="#{page.heading}">動画プラットフォーム</h1>
 
-    <!-- ログインカード -->
+    <!-- 로그인 카드 -->
     <div class="card p-4 shadow" style="width: 100%; max-width: 400px;">
-        <h3 class="text-center mb-4">ログイン</h3>
+        <h3 class="text-center mb-4" th:text="#{login.title}">ログイン</h3>
         <form action="/login" method="post">
             <div class="mb-3">
-                <label for="email" class="form-label">メールアドレス</label>
-                <input type="email" id="email" name="username" class="form-control" required placeholder="メールアドレスを入力してください">
+                <label for="email" class="form-label" th:text="#{login.email.label}">メールアドレス</label>
+                <input type="email" id="email" name="username" class="form-control" required
+                       th:placeholder="#{login.email.placeholder}" placeholder="メールアドレスを入力してください">
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">パスワード</label>
-                <input type="password" id="password" name="password" class="form-control" required placeholder="パスワードを入力してください">
+                <label for="password" class="form-label" th:text="#{login.password.label}">パスワード</label>
+                <input type="password" id="password" name="password" class="form-control" required
+                       th:placeholder="#{login.password.placeholder}" placeholder="パスワードを入力してください">
 
-                <!-- エラーメッセージ -->
+                <!-- 에러 메시지 -->
                 <div class="text-danger mt-2" th:if="${session.loginError}">
-                    <span th:text="${session.loginError}"></span>
+                    <span th:text="${session.loginError}">아이디 또는 비밀번호가 잘못되었습니다</span>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100">ログイン</button>
+            <button type="submit" class="btn btn-primary w-100" th:text="#{login.button}">ログイン</button>
             <div class="text-center mt-3">
-                <a href="/register" class="text-decoration-none">アカウントをお持ちでない方はこちら（会員登録）</a>
+                <a href="/register" class="text-decoration-none" th:text="#{register.link}">
+                    アカウントをお持ちでない方はこちら（会員登録）
+                </a>
             </div>
         </form>
     </div>

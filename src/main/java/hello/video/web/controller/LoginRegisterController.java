@@ -28,7 +28,7 @@ public class LoginRegisterController {
     public String registerUser(UserRegisterRequestDTO user, Model model){
         try{
             userService.registerUser_ROLE_USER(user);
-            return "redirect:/login";
+            return "redirect:/register?success=true";
         } catch (Exception e){
             e.getStackTrace();
             model.addAttribute("error", e.getMessage());
