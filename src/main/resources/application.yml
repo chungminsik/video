@@ -13,6 +13,9 @@ spring:
       #max-request-size: 2GB
       max-file-size: 500MB
       max-request-size: 500MB
+  messages:
+    basename: messages
+    encoding: UTF-8
 
   datasource:
     #driver-class-name: com.mysql.cj.jdbc.Driver
@@ -30,7 +33,7 @@ spring:
       name: admin
       password: admin
 
-#JPA 설정
+  #JPA 설정
   jpa:
     #database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
