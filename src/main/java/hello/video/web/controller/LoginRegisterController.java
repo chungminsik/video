@@ -28,6 +28,8 @@ public class LoginRegisterController {
     public String registerUser(UserRegisterRequestDTO user, Model model){
         try{
             userService.registerUser_ROLE_USER(user);
+
+            //ture를 보내서 팝업을 실행하고 다시 login 화면으로 보내짐
             return "redirect:/register?success=true";
         } catch (Exception e){
             e.getStackTrace();
