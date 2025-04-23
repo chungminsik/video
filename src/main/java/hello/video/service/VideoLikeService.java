@@ -35,6 +35,8 @@ public class VideoLikeService {
         if (isLiked) {
             // 좋아요 추가
             if (existingLike.isEmpty()) {
+                video.increaseLiked();
+
                 VideoLike like = new VideoLike();
                 like.setUser(user);
                 like.setVideo(video);
@@ -42,6 +44,8 @@ public class VideoLikeService {
             }
         } else {
             // 좋아요 취소
+            video.decreaseLiked();
+
             VideoLike like = existingLike.get();
             videoLikeRepository.delete(like);
         }

@@ -16,7 +16,8 @@ public class VideoMypageResponseDTO {
         this.description = video.getDescription();
         this.thumbnailUrl = video.getThumbnailUrl();
         this.uploadDate = video.getUploadDate();
-        this.likeCount = video.getLikes() != null ? video.getLikes().size() : 0;
+        this.liked = video.getLiked();
+
     }
 
     private Long id;
@@ -24,5 +25,6 @@ public class VideoMypageResponseDTO {
     private String description;
     private String thumbnailUrl;
     private LocalDateTime uploadDate;
-    private int likeCount;
+    private Long liked;
+    private Long views;
 }

@@ -58,6 +58,10 @@ public class Video {
     @Column(nullable = false)
     private Long views = 0L;
 
+    //좋아요 갯수는 video 테이블에서. 유저가 좋아요를 누른 상태 관리는 VideoLike 테이블에서
+    @Column(nullable = false)
+    private Long liked = 0L;
+
     @CreationTimestamp
     private LocalDateTime uploadDate;
 
@@ -76,4 +80,8 @@ public class Video {
     public void increaseViews(){
         this.views++;
     }
+
+    public void increaseLiked(){ this.liked++; }
+
+    public void decreaseLiked(){ this.liked--; }
 }

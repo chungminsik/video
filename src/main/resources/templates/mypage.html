@@ -93,7 +93,7 @@
                     </h5>
                     <p class="card-text" th:text="${video.description}">動画説明</p>
                     <p class="text-muted" th:text="'📅: ' + ${#temporals.format(video.uploadDate, 'yyyy-MM-dd HH:mm')}"></p>
-                    <p class="text-muted" th:text="'❤️: ' + (${mypage.likeCount} ?: 0)">❤️ : 0</p>
+                    <p class="text-muted" th:text="'❤️: ' + (${video.liked} ?: 0)">❤️ : 0</p>
                     <div class="d-flex justify-content-between">
                         <button class="btn btn-warning btn-sm"
                                 data-bs-toggle="modal"
