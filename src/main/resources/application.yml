@@ -59,4 +59,8 @@ file:
     #thumbnail-path: C:/coding/Java project/uploads/thumbnails/
 
     video-path: /tmp/uploads/videos/
-    thumbnail-path: /tmp/uploads/thumbnails/
+  thumbnail-path: /tmp/uploads/thumbnails/
+
+jwt:
+  secret: test-secret-key-change
+  expiration: 3600000
